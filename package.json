@@ -2,13 +2,28 @@
   "name": "pug-fmt",
   "version": "0.0.0",
   "description": "Pug Formatter",
-  "main": "dist/index.js",
   "scripts": {
     "clean": "rm -Rf coverage dist junit.xml pnpm-lock.yaml node_modules",
-    "build": "tsc --project ./tsconfig.build.json",
+    "build": "tsc --noEmit && vite build",
     "format": "prettier --write .",
     "lint": "eslint .",
-    "test": "vitest"
+    "test": "vitest",
+    "coverage": "vitest run --coverage"
+  },
+  "type": "module",
+  "files": [
+    "dist",
+    "src",
+    "tsconfig.json"
+  ],
+  "main": "dist/index.js",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    }
   },
   "keywords": [
     "pug",
@@ -36,12 +51,6 @@
   ],
   "bugs": "https://github.com/Shinigami92/pug-fmt/issues",
   "license": "MIT",
-  "files": [
-    "dist",
-    "src",
-    "tsconfig.build.json",
-    "tsconfig.json"
-  ],
   "dependencies": {
     "pug-lexer": "^5.0.0"
   },
@@ -64,6 +73,7 @@
     "prettier-plugin-organize-imports": "~3.1.1",
     "typescript": "~4.8.4",
     "vite": "~3.1.8",
+    "vite-plugin-dts": "~1.6.6",
     "vitest": "~0.24.3"
   },
   "packageManager": "pnpm@7.13.5",
