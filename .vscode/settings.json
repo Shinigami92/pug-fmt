@@ -1,0 +1,33 @@
+{
+  "cSpell.words": [
+    "Quadflieg",
+    "autocloseable",
+    "backticks",
+    "blockcode",
+    "codemirror",
+    "ecmascript",
+    "endregion",
+    "frameset",
+    "linebreak",
+    "multiline",
+    "multilines",
+    "nobr",
+    "outdent",
+    "parens",
+    "pipeless",
+    "prettierrc",
+    "pugjs",
+    "readonly",
+    "rvalue",
+    "typeof",
+    "vite",
+    "vitepress",
+    "vitest",
+    "yaml"
+  ],
+  "eslint.validate": ["javascript", "typescript"],
+  "files.associations": {
+    "*.json5": "jsonc"
+  },
+  "typescript.tsdk": "node_modules/typescript/lib"
+}

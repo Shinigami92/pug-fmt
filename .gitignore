@@ -22,6 +22,8 @@ lib-cov
 coverage
 *.lcov
 
+junit.xml
+
 # nyc test coverage
 .nyc_output
 
@@ -102,3 +104,24 @@ dist
 
 # TernJS port file
 .tern-port
+
+# docs
+.temp
+.cache
+
+# yarn no zero-install
+.yarn/*
+!.yarn/patches
+!.yarn/releases
+!.yarn/plugins
+!.yarn/sdks
+!.yarn/versions
+.pnp.*
+
+# tests
+tests/private
+
+# benchmarking
+benchmark/
+processed-*.txt
+

@@ -1,0 +1,22 @@
+// @ts-check
+/// <reference types="./src/prettier" />
+
+/**
+ * @type {import('prettier').Options}
+ */
+module.exports = {
+  plugins: [require.resolve('prettier-plugin-organize-imports')],
+  singleQuote: true,
+  trailingComma: 'all',
+  overrides: [
+    {
+      files: '*.json5',
+      options: {
+        parser: 'json5',
+        quoteProps: 'preserve',
+        singleQuote: false,
+        trailingComma: 'none',
+      },
+    },
+  ],
+};
