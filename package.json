@@ -1,6 +1,6 @@
 {
   "name": "pug-fmt",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Pug Formatter",
   "scripts": {
     "clean": "rm -Rf coverage dist junit.xml pnpm-lock.yaml node_modules",
