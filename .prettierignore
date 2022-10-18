@@ -5,3 +5,4 @@ pnpm-lock.yaml
 benchmark/
 coverage/
 dist/
+CHANGELOG.md
