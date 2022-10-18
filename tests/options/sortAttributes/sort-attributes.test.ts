@@ -1,9 +1,11 @@
-import type { PugSortAttributes } from 'src/options/attribute-sorting/index';
+import { describe, expect, it } from 'vitest';
 import {
   compareAttributeToken,
+  SortAttributesBeginningOption,
+  SortAttributesEndOption,
+  SortAttributesOption,
   stableSort,
-} from 'src/options/attribute-sorting/utils';
-import { describe, expect, it } from 'vitest';
+} from '../../../src/options';
 import { compareFiles, createAttributeToken } from '../../common';
 
 describe('Options', () => {
@@ -11,8 +13,8 @@ describe('Options', () => {
     it('should sort attributes', () => {
       const { actual, expected } = compareFiles(__dirname, {
         formatOptions: {
-          pugSortAttributesBeginning: ['v-for', ':key', 'src', 'alt'],
-          pugSortAttributesEnd: ['@click'],
+          sortAttributesBeginning: ['v-for', ':key', 'src', 'alt'],
+          sortAttributesEnd: ['@click'],
         },
       });
       expect(actual).toBe(expected);
@@ -21,23 +23,23 @@ describe('Options', () => {
 
   describe('sort utilities', () => {
     it('should sort only the beginning attributes', () => {
-      const pugSortAttributes: PugSortAttributes = 'as-is';
-      const pugSortAttributesBeginning: string[] = [
+      const sortAttributes: SortAttributesOption = 'as-is';
+      const sortAttributesBeginning: SortAttributesBeginningOption = [
         'v-for',
         ':key',
         'src',
         'alt',
       ];
-      const pugSortAttributesEnd: string[] = [];
+      const sortAttributesEnd: SortAttributesEndOption = [];
       const expected: string[] = ['v-for', ':key', 'src', 'alt'];
       const code: string[] = ['alt', ':key', 'v-for', 'src'];
       const actual: string[] = stableSort(code, (a, b) =>
         compareAttributeToken(
           createAttributeToken(a),
           createAttributeToken(b),
-          pugSortAttributes,
-          pugSortAttributesBeginning,
-          pugSortAttributesEnd,
+          sortAttributes,
+          sortAttributesBeginning,
+          sortAttributesEnd,
         ),
       );
 
@@ -45,9 +47,9 @@ describe('Options', () => {
     });
 
     it('should sort only the end attributes', () => {
-      const pugSortAttributes: PugSortAttributes = 'as-is';
-      const pugSortAttributesBeginning: string[] = [];
-      const pugSortAttributesEnd: string[] = [
+      const sortAttributes: SortAttributesOption = 'as-is';
+      const sortAttributesBeginning: SortAttributesBeginningOption = [];
+      const sortAttributesEnd: SortAttributesEndOption = [
         'v-for',
         ':key',
         'src',
@@ -75,9 +77,9 @@ describe('Options', () => {
         compareAttributeToken(
           createAttributeToken(a),
           createAttributeToken(b),
-          pugSortAttributes,
-          pugSortAttributesBeginning,
-          pugSortAttributesEnd,
+          sortAttributes,
+          sortAttributesBeginning,
+          sortAttributesEnd,
         ),
       );
 
@@ -85,9 +87,13 @@ describe('Options', () => {
     });
 
     it('should sort both beginning and end, but keep middle attributes as is', () => {
-      const pugSortAttributes: PugSortAttributes = 'as-is';
-      const pugSortAttributesBeginning: string[] = ['^x$', '^y$', '^z$'];
-      const pugSortAttributesEnd: string[] = [
+      const sortAttributes: SortAttributesOption = 'as-is';
+      const sortAttributesBeginning: SortAttributesBeginningOption = [
+        '^x$',
+        '^y$',
+        '^z$',
+      ];
+      const sortAttributesEnd: SortAttributesEndOption = [
         'v-for',
         ':key',
         'src',
@@ -127,9 +133,9 @@ describe('Options', () => {
         compareAttributeToken(
           createAttributeToken(a),
           createAttributeToken(b),
-          pugSortAttributes,
-          pugSortAttributesBeginning,
-          pugSortAttributesEnd,
+          sortAttributes,
+          sortAttributesBeginning,
+          sortAttributesEnd,
         ),
       );
 
@@ -137,9 +143,13 @@ describe('Options', () => {
     });
 
     it('should sort beginning, end, and middle should be sorted ascending', () => {
-      const pugSortAttributes: PugSortAttributes = 'asc';
-      const pugSortAttributesBeginning: string[] = ['^x$', '^y$', '^z$'];
-      const pugSortAttributesEnd: string[] = [
+      const sortAttributes: SortAttributesOption = 'asc';
+      const sortAttributesBeginning: SortAttributesBeginningOption = [
+        '^x$',
+        '^y$',
+        '^z$',
+      ];
+      const sortAttributesEnd: SortAttributesEndOption = [
         'v-for',
         ':key',
         'src',
@@ -181,9 +191,9 @@ describe('Options', () => {
         compareAttributeToken(
           createAttributeToken(a),
           createAttributeToken(b),
-          pugSortAttributes,
-          pugSortAttributesBeginning,
-          pugSortAttributesEnd,
+          sortAttributes,
+          sortAttributesBeginning,
+          sortAttributesEnd,
         ),
       );
 
@@ -191,9 +201,13 @@ describe('Options', () => {
     });
 
     it('should sort beginning, end, and middle should be sorted descending', () => {
-      const pugSortAttributes: PugSortAttributes = 'desc';
-      const pugSortAttributesBeginning: string[] = ['^x$', '^y$', '^z$'];
-      const pugSortAttributesEnd: string[] = [
+      const sortAttributes: SortAttributesOption = 'desc';
+      const sortAttributesBeginning: SortAttributesBeginningOption = [
+        '^x$',
+        '^y$',
+        '^z$',
+      ];
+      const sortAttributesEnd: SortAttributesEndOption = [
         'v-for',
         ':key',
         'src',
@@ -233,9 +247,9 @@ describe('Options', () => {
         compareAttributeToken(
           createAttributeToken(a),
           createAttributeToken(b),
-          pugSortAttributes,
-          pugSortAttributesBeginning,
-          pugSortAttributesEnd,
+          sortAttributes,
+          sortAttributesBeginning,
+          sortAttributesEnd,
         ),
       );
 
@@ -243,9 +257,9 @@ describe('Options', () => {
     });
 
     it('should keep middle attributes untouched', () => {
-      const pugSortAttributes: PugSortAttributes = 'as-is';
-      const pugSortAttributesBeginning: string[] = ['a'];
-      const pugSortAttributesEnd: string[] = ['b'];
+      const sortAttributes: SortAttributesOption = 'as-is';
+      const sortAttributesBeginning: SortAttributesBeginningOption = ['a'];
+      const sortAttributesEnd: SortAttributesEndOption = ['b'];
       // eslint-disable-next-line spellcheck/spell-checker
       const expected: string[] = 'aedcfghilnb'.split('');
       // eslint-disable-next-line spellcheck/spell-checker
@@ -254,9 +268,9 @@ describe('Options', () => {
         compareAttributeToken(
           createAttributeToken(a),
           createAttributeToken(b),
-          pugSortAttributes,
-          pugSortAttributesBeginning,
-          pugSortAttributesEnd,
+          sortAttributes,
+          sortAttributesBeginning,
+          sortAttributesEnd,
         ),
       );
 
@@ -264,9 +278,9 @@ describe('Options', () => {
     });
 
     it('should keep every attribute untouched', () => {
-      const pugSortAttributes: PugSortAttributes = 'as-is';
-      const pugSortAttributesBeginning: string[] = [];
-      const pugSortAttributesEnd: string[] = [];
+      const sortAttributes: SortAttributesOption = 'as-is';
+      const sortAttributesBeginning: SortAttributesBeginningOption = [];
+      const sortAttributesEnd: SortAttributesEndOption = [];
       // eslint-disable-next-line spellcheck/spell-checker
       const expected: string[] = 'aedcfghilnb'.split('');
       // eslint-disable-next-line spellcheck/spell-checker
@@ -275,9 +289,9 @@ describe('Options', () => {
         compareAttributeToken(
           createAttributeToken(a),
           createAttributeToken(b),
-          pugSortAttributes,
-          pugSortAttributesBeginning,
-          pugSortAttributesEnd,
+          sortAttributes,
+          sortAttributesBeginning,
+          sortAttributesEnd,
         ),
       );
 

@@ -1,5 +1,5 @@
-import { compareFiles } from 'tests/common';
 import { describe, expect, it } from 'vitest';
+import { compareFiles } from '../../common';
 
 describe('Attributes', () => {
   it('should handle style attributes', () => {

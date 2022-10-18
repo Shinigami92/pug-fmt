@@ -1,14 +1,15 @@
 import { describe, expect, it } from 'vitest';
-import { compareFiles } from '../../common';
+import { compareFiles } from '../../../common';
 
 describe('Options', () => {
-  describe('printWidth', () => {
-    it('should handle printWidth', () => {
+  describe('wrapAttributesThreshold', () => {
+    it('should never allow an attribute without being wrapped', () => {
       const { actual, expected } = compareFiles(__dirname, {
         formatOptions: {
-          printWidth: 120,
+          wrapAttributesThreshold: 0,
         },
       });
+
       expect(actual).toBe(expected);
     });
   });
