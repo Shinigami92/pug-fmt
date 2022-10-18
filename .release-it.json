@@ -11,6 +11,7 @@
   },
   "git": {
     "changelog": "git log --pretty=format:\"* %s (%h)\" ${from}...${to}",
+    "requireBranch": "main",
     "commit": true,
     "commitMessage": "chore(release): ${version}",
     "tag": true,
