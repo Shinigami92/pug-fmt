@@ -46,7 +46,6 @@ import type {
   WhileToken,
   YieldToken,
 } from 'pug-lexer';
-import { types } from 'util';
 import type { DoctypeShortcut } from './doctype-shortcut-registry';
 import { DOCTYPE_SHORTCUT_REGISTRY } from './doctype-shortcut-registry';
 import { logger } from './logger';
@@ -1707,7 +1706,7 @@ export class PugPrinter {
             '\nYou used interpolated code in your pipeless script tag, so you may ignore this warning.',
           );
 
-          if (types.isNativeError(error)) {
+          if (error instanceof Error) {
             warningContext.push(
               `\nFound ${parser} ${error.name}: ${error.message}.`,
             );
