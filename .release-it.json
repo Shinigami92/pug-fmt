@@ -29,6 +29,7 @@
   "plugins": {
     "@release-it/conventional-changelog": {
       "infile": "CHANGELOG.md",
+      "header": "# Changelog",
       "preset": {
         "name": "conventionalcommits",
         "types": [
@@ -41,6 +42,9 @@
             "section": "Bug Fixes"
           }
         ]
+      },
+      "context": {
+        "linkCompare": false
       }
     }
   }
