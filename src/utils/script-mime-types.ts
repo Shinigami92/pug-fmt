@@ -1,5 +1,13 @@
-import type { BuiltInParserName } from 'prettier';
 import type { AttributeToken } from 'pug-lexer';
+
+/** Copy of Prettier BuiltInParserName. */
+export type BuiltInParserName =
+  | 'babel'
+  | 'css'
+  | 'json'
+  | 'markdown'
+  | 'typescript'
+  | 'yaml';
 
 // NOTE: XML would be useful, but it's not a default parser.
 //       YAML is not official, but it costs nothing to support it right now.

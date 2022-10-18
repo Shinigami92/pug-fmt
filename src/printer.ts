@@ -50,13 +50,12 @@ import { types } from 'util';
 import type { DoctypeShortcut } from './doctype-shortcut-registry';
 import { DOCTYPE_SHORTCUT_REGISTRY } from './doctype-shortcut-registry';
 import { logger } from './logger';
+import type { AttributeSeparatorOption, PugFmtOptions } from './options';
 import {
-  AttributeSeparatorOption,
   compareAttributeToken,
   formatEmptyAttribute,
   formatPreserveCommentSpaces,
   partialSort,
-  PugFmtOptions,
   resolveAttributeSeparatorOption,
 } from './options';
 import {
@@ -78,6 +77,7 @@ import {
   previousTypeAttributeToken,
   unwrapLineFeeds,
 } from './utils/common';
+import type { BuiltInParserName } from './utils/script-mime-types';
 import { getScriptParserName } from './utils/script-mime-types';
 import { isSvelteInterpolation } from './utils/svelte';
 import {
@@ -132,17 +132,18 @@ export class PugPrinter {
   private readonly neverUseAttributeSeparator: boolean;
   private readonly wrapAttributesPattern: RegExp | null;
 
-  private readonly codeInterpolationOptions: Pick<
-    RequiredOptions,
-    | 'singleQuote'
-    | 'bracketSpacing'
-    | 'arrowParens'
-    | 'printWidth'
-    | 'endOfLine'
-    | 'useTabs'
-    | 'tabWidth'
-    | 'bracketSameLine'
-  >;
+  // TODO @Shinigami92 2022-10-18: reimplement this
+  // private readonly codeInterpolationOptions: Pick<
+  //   RequiredOptions,
+  //   | 'singleQuote'
+  //   | 'bracketSpacing'
+  //   | 'arrowParens'
+  //   | 'printWidth'
+  //   | 'endOfLine'
+  //   | 'useTabs'
+  //   | 'tabWidth'
+  //   | 'bracketSameLine'
+  // >;
 
   private currentTagPosition: number = 0;
   private possibleIdPosition: number = 0;
@@ -194,16 +195,17 @@ export class PugPrinter {
       ? new RegExp(wrapAttributesPattern)
       : null;
 
-    this.codeInterpolationOptions = {
-      singleQuote: options.pugSingleQuote ?? options.singleQuote,
-      bracketSpacing: options.pugBracketSpacing ?? options.bracketSpacing,
-      arrowParens: options.pugArrowParens ?? options.arrowParens,
-      printWidth: 9000,
-      endOfLine: 'lf',
-      useTabs: options.pugUseTabs ?? options.useTabs,
-      tabWidth: options.pugTabWidth ?? options.tabWidth,
-      bracketSameLine: options.pugBracketSameLine ?? options.bracketSameLine,
-    };
+    // TODO @Shinigami92 2022-10-18: reimplement this
+    // this.codeInterpolationOptions = {
+    //   singleQuote: options.pugSingleQuote ?? options.singleQuote,
+    //   bracketSpacing: options.pugBracketSpacing ?? options.bracketSpacing,
+    //   arrowParens: options.pugArrowParens ?? options.arrowParens,
+    //   printWidth: 9000,
+    //   endOfLine: 'lf',
+    //   useTabs: options.pugUseTabs ?? options.useTabs,
+    //   tabWidth: options.pugTabWidth ?? options.tabWidth,
+    //   bracketSameLine: options.pugBracketSameLine ?? options.bracketSameLine,
+    // };
   }
 
   // ##     ## ######## ##       ########  ######## ########   ######
@@ -381,25 +383,26 @@ export class PugPrinter {
   }
 
   private frameworkFormat(code: string): string {
-    const options = {
-      ...this.codeInterpolationOptions,
-      // we need to keep the original singleQuote option
-      // see https://github.com/prettier/plugin-pug/issues/339
-      singleQuote: this.options.singleQuote,
-    };
+    // const options = {
+    //   ...this.codeInterpolationOptions,
+    //   // we need to keep the original singleQuote option
+    //   // see https://github.com/prettier/plugin-pug/issues/339
+    //   singleQuote: this.options.singleQuote,
+    // };
 
-    switch (this.framework) {
-      case 'angular':
-        options.parser = '__ng_interpolation';
-        break;
-      case 'svelte':
-      case 'vue':
-      default:
-        options.parser = 'babel';
-        options.semi = false;
-    }
+    // switch (this.framework) {
+    //   case 'angular':
+    //     options.parser = '__ng_interpolation';
+    //     break;
+    //   case 'svelte':
+    //   case 'vue':
+    //   default:
+    //     options.parser = 'babel';
+    //     options.semi = false;
+    // }
 
-    let result: string = format(code, options);
+    // TODO @Shinigami92 2022-10-18: reimplement this
+    let result: string = code; // format(code, options);
     if (result[0] === ';') {
       result = result.slice(1);
     }
@@ -430,8 +433,9 @@ export class PugPrinter {
                 'The following expression could not be formatted correctly. Please try to fix it yourself and if there is a problem, please open a bug issue:',
                 code,
               );
+              // TODO @Shinigami92 2022-10-18: reimplement this
               result += handleBracketSpacing(
-                this.options.pugBracketSpacing,
+                true, // this.options.pugBracketSpacing,
                 code,
               );
               text = text.slice(end + 2);
@@ -455,26 +459,26 @@ export class PugPrinter {
                   `code: \`${code.trim()}\``,
                 );
               } else if (error.includes("Unexpected token '('")) {
-                if (this.framework !== 'vue') {
-                  logger.warn(
-                    '[PugPrinter:formatText]: Found unexpected token `(`.',
-                    `code: \`${code.trim()}\``,
-                  );
-                }
+                // if (this.framework !== 'vue') {
+                //   logger.warn(
+                //     '[PugPrinter:formatText]: Found unexpected token `(`.',
+                //     `code: \`${code.trim()}\``,
+                //   );
+                // }
               } else if (error.includes('Missing expected `)`')) {
-                if (this.framework !== 'vue') {
-                  logger.warn(
-                    '[PugPrinter:formatText]: Missing expected `)`.',
-                    `code: \`${code.trim()}\``,
-                  );
-                }
+                // if (this.framework !== 'vue') {
+                //   logger.warn(
+                //     '[PugPrinter:formatText]: Missing expected `)`.',
+                //     `code: \`${code.trim()}\``,
+                //   );
+                // }
               } else if (error.includes('Missing expected `:`')) {
-                if (this.framework !== 'vue') {
-                  logger.warn(
-                    '[PugPrinter:formatText]: Missing expected `:`.',
-                    `code: \`${code.trim()}\``,
-                  );
-                }
+                // if (this.framework !== 'vue') {
+                //   logger.warn(
+                //     '[PugPrinter:formatText]: Missing expected `:`.',
+                //     `code: \`${code.trim()}\``,
+                //   );
+                // }
               } else {
                 logger.warn('[PugPrinter:formatText]: ', error);
               }
@@ -483,11 +487,12 @@ export class PugPrinter {
               logger.warn('[PugPrinter:formatText]: ', error);
             }
             try {
-              code = format(code, {
-                parser: 'babel',
-                ...this.codeInterpolationOptions,
-                semi: false,
-              });
+              // TODO @Shinigami92 2022-10-18: reimplement this
+              // code = format(code, {
+              //   parser: 'babel',
+              //   ...this.codeInterpolationOptions,
+              //   semi: false,
+              // });
               if (code[0] === ';') {
                 code = code.slice(1);
               }
@@ -496,7 +501,11 @@ export class PugPrinter {
             }
           }
           code = unwrapLineFeeds(code);
-          result += handleBracketSpacing(this.options.pugBracketSpacing, code);
+          // TODO @Shinigami92 2022-10-18: reimplement this
+          result += handleBracketSpacing(
+            true, //this.options.pugBracketSpacing,
+            code,
+          );
           text = text.slice(end + 2);
         } else {
           result += '{{';
@@ -506,7 +515,12 @@ export class PugPrinter {
       } else {
         // Find single curly brackets for svelte
         const start2: number = text.indexOf('{');
-        if (this.options.pugFramework === 'svelte' && start2 !== -1) {
+        if (
+          // TODO @Shinigami92 2022-10-18: reimplement this
+          // eslint-disable-next-line no-constant-condition
+          /* this.options.pugFramework === 'svelte' */ false &&
+          start2 !== -1
+        ) {
           result += text.slice(0, start2);
           text = text.slice(start2 + 1);
           const end2: number = text.indexOf('}');
@@ -526,7 +540,7 @@ export class PugPrinter {
                   code,
                 );
                 result += handleBracketSpacing(
-                  this.options.pugBracketSpacing,
+                  true, // this.options.pugBracketSpacing,
                   code,
                 );
                 text = text.slice(end2 + 1);
@@ -537,11 +551,12 @@ export class PugPrinter {
             } catch (error: unknown) {
               logger.warn('[PugPrinter:formatText]: ', error);
               try {
-                code = format(code, {
-                  parser: 'babel',
-                  ...this.codeInterpolationOptions,
-                  semi: false,
-                });
+                // TODO @Shinigami92 2022-10-18: reimplement this
+                // code = format(code, {
+                //   parser: 'babel',
+                //   ...this.codeInterpolationOptions,
+                //   semi: false,
+                // });
                 if (code[0] === ';') {
                   code = code.slice(1);
                 }
@@ -551,7 +566,7 @@ export class PugPrinter {
             }
             code = unwrapLineFeeds(code);
             result += handleBracketSpacing(
-              this.options.pugBracketSpacing,
+              true, // this.options.pugBracketSpacing,
               code,
               ['{', '}'],
             );
@@ -576,13 +591,14 @@ export class PugPrinter {
     { trimTrailingSemicolon = false }: FormatDelegatePrettierOptions = {},
   ): string {
     val = val.trim();
-    const options = { ...this.codeInterpolationOptions };
+    // const options = { ...this.codeInterpolationOptions };
     const wasQuoted: boolean = isQuoted(val);
     if (wasQuoted) {
-      options.singleQuote = !this.options.pugSingleQuote;
+      // options.singleQuote = this.options.attributeQuotes === 'double';
       val = val.slice(1, -1); // Remove quotes
     }
-    val = format(val, { parser, ...options });
+    // TODO @Shinigami92 2022-10-18: reimplement this
+    // val = format(val, { parser, ...options });
     if (this.quotes === '"') {
       val = val.replace(/"/g, '\\"');
     } else {
@@ -625,7 +641,7 @@ export class PugPrinter {
 
   private formatFrameworkInterpolation(
     val: string,
-    parser: keyof Pick<typeof AngularParsers, '__ng_interpolation'>, // TODO: may be changed to allow a special parser for svelte
+    parser: '__ng_interpolation', // TODO: may be changed to allow a special parser for svelte
     [opening, closing]: ['{{', '}}'] | ['{', '}'],
   ): string {
     val = val.slice(1, -1); // Remove quotes
@@ -637,12 +653,13 @@ export class PugPrinter {
         val,
       );
     } else {
-      const options: Options = {
-        ...this.codeInterpolationOptions,
-        singleQuote: !this.options.pugSingleQuote,
-      };
+      // const options = {
+      //   ...this.codeInterpolationOptions,
+      //   singleQuote: this.options.attributeQuotes === 'double',
+      // };
       try {
-        val = format(val, { parser, ...options });
+        // TODO @Shinigami92 2022-10-18: reimplement this
+        // val = format(val, { parser, ...options });
       } catch (error) {
         logger.warn(
           'The following expression could not be formatted correctly. Please try to fix it yourself and if there is a problem, please open a bug issue:',
@@ -651,10 +668,12 @@ export class PugPrinter {
       }
       val = unwrapLineFeeds(val);
     }
-    val = handleBracketSpacing(this.options.pugBracketSpacing, val, [
-      opening,
-      closing,
-    ]);
+    // TODO @Shinigami92 2022-10-18: reimplement this
+    val = handleBracketSpacing(
+      true, // this.options.pugBracketSpacing
+      val,
+      [opening, closing],
+    );
     return this.quoteString(val);
   }
 
@@ -1008,7 +1027,9 @@ export class PugPrinter {
         val = this.formatVueExpression(val);
       } else if (isVueEventBinding(token.name)) {
         val = this.formatVueEventBinding(val);
-      } else if (this.framework === 'vue' && isVueVDirective(token.name)) {
+      } else if (
+        /* this.framework === 'vue' && */ isVueVDirective(token.name)
+      ) {
         val = this.formatVueExpression(val);
       } else if (isVueVBindExpression(token.name)) {
         val = this.formatDelegatePrettier(val, '__js_expression');
@@ -1035,10 +1056,11 @@ export class PugPrinter {
           // The value is exactly true and is not quoted
           return;
         } else if (token.mustEscape) {
-          val = format(val, {
-            parser: '__js_expression',
-            ...this.codeInterpolationOptions,
-          });
+          // TODO @Shinigami92 2022-10-18: reimplement this
+          // val = format(val, {
+          //   parser: '__js_expression',
+          //   ...this.codeInterpolationOptions,
+          // });
 
           const lines: string[] = val.split('\n');
           const codeIndentLevel: number = this.wrapAttributes
@@ -1072,7 +1094,8 @@ export class PugPrinter {
 
   private ['end-attributes'](token: EndAttributesToken): void {
     if (this.wrapAttributes && this.result[this.result.length - 1] !== '(') {
-      if (!this.options.pugBracketSameLine) {
+      // TODO @Shinigami92 2022-10-18: Check this condition
+      if (this.options.wrapClosingAttributeBracket !== 'force') {
         this.result += '\n';
       }
       this.result += this.indentString.repeat(this.indentLevel);
@@ -1101,7 +1124,7 @@ export class PugPrinter {
       // There were no attributes
       this.result = this.result.slice(0, -1);
     } else if (this.previousToken?.type === 'attribute') {
-      if (this.options.pugBracketSameLine) {
+      if (this.options.wrapClosingAttributeBracket === 'force') {
         this.result = this.result.trimEnd();
       }
       this.result += ')';
@@ -1132,13 +1155,16 @@ export class PugPrinter {
   private indent(token: IndentToken): string {
     const result: string = `\n${this.indentString.repeat(this.indentLevel)}`;
     this.indentLevel++;
-    this.currentLineLength = result.length - 1 + 1 + this.options.pugTabWidth; // -1 for \n, +1 for non zero based
+    // TODO @Shinigami92 2022-10-18: Need to separate `useTabsForIndentation` and `indentSize` from each other
+    const tabWidth: number =
+      this.options.tabWidth === 'tab' ? 1 : this.options.tabWidth;
+    this.currentLineLength = result.length - 1 + 1 + tabWidth; // -1 for \n, +1 for non zero based
     logger.debug(
       'indent',
       {
         result,
         indentLevel: this.indentLevel,
-        pugTabWidth: this.options.pugTabWidth,
+        tabWidth: this.options.tabWidth,
       },
       this.currentLineLength,
     );
@@ -1523,8 +1549,9 @@ export class PugPrinter {
         break;
     }
     result += token.mustEscape ? '#' : '!';
+    // TODO @Shinigami92 2022-10-18: reimplement this
     result += handleBracketSpacing(
-      this.options.pugBracketSpacing,
+      true, // this.options.pugBracketSpacing,
       token.val.trim(),
       ['{', '}'],
     );
@@ -1537,20 +1564,23 @@ export class PugPrinter {
       result += '!';
     }
     result += token.buffer ? '=' : '-';
-    let useSemi: boolean = this.options.pugSemi;
+    // TODO @Shinigami92 2022-10-18: reimplement this
+    let useSemi: boolean = true;
+    // let useSemi: boolean = this.options.pugSemi;
     if (useSemi && (token.mustEscape || token.buffer)) {
       useSemi = false;
     }
     let val: string = token.val;
     try {
       const valBackup: string = val;
-      val = format(val, {
-        parser: 'babel',
-        ...this.codeInterpolationOptions,
-        semi: useSemi,
-        // Always pass endOfLine 'lf' here to be sure that the next `val.slice(0, -1)` call is always working
-        endOfLine: 'lf',
-      });
+      // TODO @Shinigami92 2022-10-18: reimplement this
+      // val = format(val, {
+      //   parser: 'babel',
+      //   ...this.codeInterpolationOptions,
+      //   semi: useSemi,
+      //   // Always pass endOfLine 'lf' here to be sure that the next `val.slice(0, -1)` call is always working
+      //   endOfLine: 'lf',
+      // });
       val = val.slice(0, -1);
       if (val[0] === ';') {
         val = val.slice(1);
@@ -1650,10 +1680,11 @@ export class PugPrinter {
         }
 
         try {
-          result = format(rawText, {
-            parser,
-            ...this.codeInterpolationOptions,
-          });
+          // TODO @Shinigami92 2022-10-18: reimplement this
+          // result = format(rawText, {
+          //   parser,
+          //   ...this.codeInterpolationOptions,
+          // });
         } catch (error: unknown) {
           if (!usedInterpolatedCode) {
             logger.error(error);
@@ -1744,9 +1775,11 @@ export class PugPrinter {
   }
 
   private extends(token: ExtendsToken): string {
-    const indent: string = this.options.pugSingleFileComponentIndentation
-      ? this.indentString
-      : '';
+    const indent: string = '';
+    // TODO @Shinigami92 2022-10-18: reimplement this
+    // const indent: string = this.options.pugSingleFileComponentIndentation
+    //   ? this.indentString
+    //   : '';
     return `${indent}extends `;
   }
 
@@ -1871,11 +1904,12 @@ export class PugPrinter {
 
   private eachOf(token: EachOfToken): string {
     let value: string = token.value.trim();
-    value = format(value, {
-      parser: 'babel',
-      ...this.codeInterpolationOptions,
-      semi: false,
-    });
+    // TODO @Shinigami92 2022-10-18: reimplement this
+    // value = format(value, {
+    //   parser: 'babel',
+    //   ...this.codeInterpolationOptions,
+    //   semi: false,
+    // });
     if (value[0] === ';') {
       value = value.slice(1);
     }
